@@ -2,9 +2,16 @@ const resistance = 0.99;
 const ticks = 82;
 const tntMomentum = 0.5889496322464138;
 
-// initial pos
-const px0 = 0;
-const pz0 = 1;
+const tntVectors = {
+	NW: [tntMomentum, tntMomentum],
+	NE: [-tntMomentum, tntMomentum],
+	SW: [tntMomentum, -tntMomentum],
+	SE: [-tntMomentum, -tntMomentum]
+};
+
+// initial pos, now dynamic
+let px0 = 0;
+let pz0 = 0;
 
 function coordinate2config(x, z) {
 	const sumFactor = (1 - Math.pow(resistance, ticks)) / (1 - resistance);
@@ -12,12 +19,6 @@ function coordinate2config(x, z) {
 	const imx = (x - px0) / sumFactor;
 	const imz = (z - pz0) / sumFactor;
 	// TNT momentum vectors
-	const tntVectors = {
-		NW: [-tntMomentum, -tntMomentum],
-		NE: [tntMomentum, -tntMomentum],
-		SW: [-tntMomentum, tntMomentum],
-		SE: [tntMomentum, tntMomentum]
-	};
 	// East: +X, South: +Z, West: -X, North: -Z
 	let direction = '';
 	const angle = Math.atan2(imz, imx) * 180 / Math.PI;
@@ -37,41 +38,33 @@ function coordinate2config(x, z) {
 	return [direction, n1, n2];
 }
 
-// Reverse function: config2coordinate(direction, n1, n2) => [x, z]
 function config2coordinate(direction, n1, n2) {
 	const sumFactor = (1 - Math.pow(resistance, ticks)) / (1 - resistance);
 	const a = tntMomentum;
 	let imx, imz;
 	// Use TNT vectors based on direction
 	switch (direction) {
-		case '东': // East: +X
-			// Use NE and SE: NE [a, -a], SE [a, a]
-			// imx = a*n1 + a*n2, imz = -a*n1 + a*n2
+		case '东':
+			// SW + NW
 			imx = a * n1 + a * n2;
-			imz = -a * n1 + a * n2;
+			imz = a * n1 + -a * n2;
 			break;
-		case '南': // South: +Z
-			// Use SE and SW: SE [a, a], SW [-a, a]
-			// imx = a*n1 - a*n2, imz = a*n1 + a*n2
+		case '南':
 			imx = a * n1 - a * n2;
 			imz = a * n1 + a * n2;
 			break;
-		case '西': // West: -X
-			// Use NW and SW: NW [-a, -a], SW [-a, a]
-			// imx = -a*n1 - a*n2, imz = -a*n1 + a*n2
+		case '西':
 			imx = -a * n1 - a * n2;
 			imz = -a * n1 + a * n2;
 			break;
-		case '北': // North: -Z
-			// Use NW and NE: NW [-a, -a], NE [a, -a]
-			// imx = -a*n1 + a*n2, imz = -a*n1 - a*n2
+		case '北':
 			imx = -a * n1 + a * n2;
-			imz = -a * n1 - a * n2;
+			imz = -a * n1 + -a * n2;
 			break;
 		default:
 			// fallback to North
-			imx = -a * n1 + a * n2;
-			imz = -a * n1 - a * n2;
+			imx = a * n1 - a * n2;
+			imz = -a * n1 + -a * n2;
 	}
 	// Convert back to coordinates
 	const x = imx * sumFactor + px0;
@@ -82,6 +75,33 @@ function config2coordinate(direction, n1, n2) {
 
 
 document.addEventListener('DOMContentLoaded', function() {
+	// 珍珠投掷处 input fields
+	const px0Input = document.getElementById('input-px0');
+	const pz0Input = document.getElementById('input-pz0');
+
+	// Update px0 and pz0 when input changes
+	// Integer-only enforcement
+	let lastPx0 = 0;
+	let lastPz0 = 1;
+	px0Input.addEventListener('input', function() {
+		let val = px0Input.value;
+		if (/^-?\d+$/.test(val)) {
+			px0 = parseInt(val, 10);
+			lastPx0 = px0;
+		} else {
+			px0Input.value = lastPx0;
+		}
+	});
+	pz0Input.addEventListener('input', function() {
+		let val = pz0Input.value;
+		if (/^-?\d+$/.test(val)) {
+			pz0 = parseInt(val, 10);
+			lastPz0 = pz0;
+		} else {
+			pz0Input.value = lastPz0;
+		}
+	});
+
 	const form = document.getElementById('calc-form');
 	const resultsDiv = document.getElementById('results');
 

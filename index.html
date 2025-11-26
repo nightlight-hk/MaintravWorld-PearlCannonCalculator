@@ -7,37 +7,55 @@
 	    <link rel="stylesheet" href="index.css">
     </head>
 	<body class="dark-ui">
-		<h1 class="title">Maintrav World</h1>
-		<h1 class="title">夜猫牌珍珠炮配置计算机</h1>
-		<div class="container">
-			<form id="calc-form" autocomplete="off">
-				<label for="input-x">X 坐标</label>
-				<input type="number" id="input-x" name="x" required placeholder="请输入 X" step="any">
-				<label for="input-z">Z 坐标</label>
-				<input type="number" id="input-z" name="z" required placeholder="请输入 Z" step="any">
-				<button type="submit">计算</button>
-			</form>
-			<div class="results" id="results" style="display:none;"></div>
-		</div>
+			<h1 class="title">Maintrav World</h1>
+			<h1 class="title">夜猫牌珍珠炮配置计算机</h1>
 
-		<!-- Reverse calculator for config2coordinate -->
-		<div class="container">
-			<form id="reverse-form" autocomplete="off">
-				<label for="input-direction">方向</label>
-				<select id="input-direction" name="direction" required>
-					<option value="东">东</option>
-					<option value="南">南</option>
-					<option value="西">西</option>
-					<option value="北">北</option>
-				</select>
-				<label for="input-n1">TNT数量(西/北侧)</label>
-				<input type="number" id="input-n1" name="n1" required placeholder="请输入 TNT 数量" step="any">
-				<label for="input-n2">TNT数量(东/南侧)</label>
-				<input type="number" id="input-n2" name="n2" required placeholder="请输入 TNT 数量" step="any">
-				<button type="submit">反向计算</button>
-			</form>
-			<div class="results" id="reverse-results" style="display:none;"></div>
-		</div>
+			<div class="container top-container" style="margin-bottom: 12px; text-align: center;">
+				<form id="pearl-form" autocomplete="off" class="pearl-inputs">
+					<div>
+						<label for="input-px0">珍珠投掷处X坐标(向下取整)</label>
+						<input type="number" id="input-px0" name="px0" value="0" step="1" inputmode="numeric" pattern="[0-9]*">
+					</div>
+					<div>
+						<label for="input-pz0">珍珠投掷处Z坐标(向下取整)</label>
+						<input type="number" id="input-pz0" name="pz0" value="0" step="1" inputmode="numeric" pattern="[0-9]*">
+					</div>
+				</form>
+			</div>
+
+			<div class="main-containers">
+				<div class="container">
+					<h2 class="title">坐标转配置</h2>
+					<form id="calc-form" autocomplete="off">
+						<label for="input-x">目的地 X 坐标</label>
+						<input type="number" id="input-x" name="x" required placeholder="请输入 X" step="any">
+						<label for="input-z">目的地 Z 坐标</label>
+						<input type="number" id="input-z" name="z" required placeholder="请输入 Z" step="any">
+						<button type="submit">计算</button>
+					</form>
+					<div class="results" id="results" style="display:none;"></div>
+				</div>
+
+				<!-- Reverse calculator for config2coordinate -->
+				<div class="container">
+					<h2 class="title">配置转坐标</h2>
+					<form id="reverse-form" autocomplete="off">
+						<label for="input-direction">方向</label>
+						<select id="input-direction" name="direction" required>
+							<option value="东">东</option>
+							<option value="南">南</option>
+							<option value="西">西</option>
+							<option value="北">北</option>
+						</select>
+						<label for="input-n1">TNT数量(西/北侧)</label>
+						<input type="number" id="input-n1" name="n1" required placeholder="请输入 TNT 数量" step="any">
+						<label for="input-n2">TNT数量(东/南侧)</label>
+						<input type="number" id="input-n2" name="n2" required placeholder="请输入 TNT 数量" step="any">
+						<button type="submit">计算</button>
+					</form>
+					<div class="results" id="reverse-results" style="display:none;"></div>
+				</div>
+			</div>
 
 		<script src="index.js"></script>
 	</body>
