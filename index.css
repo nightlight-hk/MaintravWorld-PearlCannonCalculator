@@ -6,15 +6,13 @@
     width: 100%;
     padding: 0 15px;
     box-sizing: border-box;
-}
-
-#pearl-form {
-    width: 100%;
-    max-width: 300px; 
-    margin: 0 auto;
+    margin-bottom: 12px;
+    text-align: center;
 }
 
 .pearl-inputs {
+    max-width: 300px; 
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -35,11 +33,8 @@
         max-width: 600px;
     }
     
-    #pearl-form {
-        max-width: 600px;
-    }
-    
     .pearl-inputs {
+        max-width: 600px;
         flex-direction: row;
         justify-content: space-between;
         align-items: flex-start;
@@ -131,7 +126,7 @@ label {
     font-weight: 500;
 }
 
-input[type="number"] {
+input {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
@@ -141,6 +136,17 @@ input[type="number"] {
     color: #e0e0e0;
     font-size: 1rem;
     box-sizing: border-box;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+    appearance: textfield;
 }
 
 select {
