@@ -35,7 +35,7 @@ function coordinate2config(x, z) {
 	// n1 = -(imz + imx)  / 2a, n2 = -(imz - imx) / 2a
 	let n1 = Math.abs((imz + imx) / (2 * a)); // NW
 	let n2 = Math.abs((imz - imx) / (2 * a)); // NE
-	if (direction == '北') n1, n2 = n2, n1;
+	if (direction == '西' || direction == '北') [n1, n2] = [n2, n1];
 	return [direction, n1, n2];
 }
 
@@ -56,7 +56,7 @@ function config2coordinate(direction, n1, n2) {
 			break;
 		case '西':
 			imx = -a * n1 - a * n2;
-			imz = -a * n1 + a * n2;
+			imz = a * n1 - a * n2;
 			break;
 		case '北':
 			imx = -a * n1 + a * n2;
