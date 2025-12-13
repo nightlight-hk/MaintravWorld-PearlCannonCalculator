@@ -9,9 +9,9 @@ const tntVectors = {
 	SE: [-tntMomentum, -tntMomentum]
 };
 
-// initial pos, now dynamic
-let px0 = 0;
-let pz0 = 0;
+// initial pos, dynamic
+let px0 = 410;
+let pz0 = 3058;
 
 function coordinate2config(x, z) {
 	const sumFactor = (1 - Math.pow(resistance, ticks)) / (1 - resistance);
