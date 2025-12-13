@@ -59,7 +59,7 @@ function config2coordinate(direction, n1, n2) {
 			imz = a * n1 - a * n2;
 			break;
 		case '北':
-			imx = -a * n1 + a * n2;
+			imx = a * n1 - a * n2;
 			imz = -a * n1 + -a * n2;
 			break;
 		default:
