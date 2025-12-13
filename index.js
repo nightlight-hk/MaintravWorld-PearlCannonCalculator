@@ -35,6 +35,7 @@ function coordinate2config(x, z) {
 	// n1 = -(imz + imx)  / 2a, n2 = -(imz - imx) / 2a
 	let n1 = Math.abs((imz + imx) / (2 * a)); // NW
 	let n2 = Math.abs((imz - imx) / (2 * a)); // NE
+	if (direction == '西' || direction == '北') n1, n2 = n2, n1;
 	return [direction, n1, n2];
 }
 
