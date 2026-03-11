@@ -205,3 +205,75 @@ button:hover {
     margin-bottom: 8px;
     color: #f5c542;
 }
+
+/* Bottom panels grid styles */
+.bottom-panels {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    padding: 16px;
+}
+
+@media (min-width: 900px) {
+    .bottom-panels {
+        flex-direction: row;
+        justify-content: center;
+        gap: 32px;
+    }
+}
+
+.number-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 8px;
+}
+
+.grid-button {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #181a20;
+    color: #e0e0e0;
+    border: 1px solid #3a3d46;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+    transition: box-shadow 0.12s ease, transform 0.08s ease, border-color 0.12s ease;
+}
+
+.grid-button:hover {
+    transform: translateY(-2px);
+}
+
+.grid-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(245,197,66,0.12);
+}
+
+.grid-button.selected {
+    border-color: #f5c542;
+    box-shadow: 0 0 18px rgba(245,197,66,0.9), inset 0 0 10px rgba(245,197,66,0.15);
+    color: #23262f;
+    background: linear-gradient(180deg,#ffd86b,#f5c542);
+}
+
+.grid-button.auto-selected {
+    border-color: #4ade80;
+    box-shadow: 0 0 18px rgba(74,222,128,0.85), inset 0 0 10px rgba(74,222,128,0.12);
+    color: #042a11;
+    background: linear-gradient(180deg,#bbf7d0,#86efac);
+}
+
+/* Make container wider for grids */
+.bottom-panels .container {
+    max-width: 680px;
+    width: 100%;
+}
+
+.bottom-panels .container .title {
+    margin-bottom: 6px;
+}

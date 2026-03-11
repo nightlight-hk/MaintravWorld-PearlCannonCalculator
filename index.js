@@ -13,6 +13,43 @@ const tntVectors = {
 let px0 = 410;
 let pz0 = 3058;
 
+// Round a numeric TNT count to the nearest value in 40,50,...,480
+function roundToNearestGrid(v) {
+	const stepIndex = Math.round((v - 40) / 10);
+	let val = 40 + stepIndex * 10;
+	if (val < 40) val = 40;
+	if (val > 480) val = 480;
+	return val;
+}
+
+// Highlight a number in the given grid (containerId). This marks the button with
+// the `auto-selected` class (green) and clears previous auto-selected in that grid.
+function highlightGridNumber(containerId, number) {
+	try {
+		const container = document.getElementById(containerId);
+		if (!container) return;
+		// clear previous auto-selected buttons
+		const prev = container.querySelectorAll('.grid-button.auto-selected');
+		prev.forEach(p => {
+			p.classList.remove('auto-selected');
+			p.setAttribute('aria-pressed', 'false');
+		});
+		// also clear any manual-selected marker stored on the container
+		if (container.dataset.autoSelected) delete container.dataset.autoSelected;
+
+		// find the button with matching number
+		const btn = container.querySelector(`.grid-button[data-number="${number}"]`);
+		if (!btn) return;
+		// ensure manual 'selected' visual is cleared
+		btn.classList.remove('selected');
+		btn.setAttribute('aria-pressed', 'true');
+		btn.classList.add('auto-selected');
+		container.dataset.autoSelected = number;
+	} catch (e) {
+		// noop if DOM not available or other issues
+	}
+}
+
 function coordinate2config(x, z) {
 	const sumFactor = (1 - Math.pow(resistance, ticks)) / (1 - resistance);
 	// required initial momentum
@@ -33,10 +70,18 @@ function coordinate2config(x, z) {
 	const a = tntMomentum;
 	// imx = -a * n1 + a * n2, imz = -a * n1 - a * n2
 	// n1 = -(imz + imx)  / 2a, n2 = -(imz - imx) / 2a
-	let n1 = Math.abs((imz + imx) / (2 * a)); // NW
-	let n2 = Math.abs((imz - imx) / (2 * a)); // NE
-	if (direction == '西' || direction == '北') [n1, n2] = [n2, n1];
-	return [direction, n1, n2];
+		let n1 = Math.abs((imz + imx) / (2 * a)); // NW
+		let n2 = Math.abs((imz - imx) / (2 * a)); // NE
+		if (direction == '西' || direction == '北') [n1, n2] = [n2, n1];
+
+		// Round n1 and n2 to nearest grid value (40..480) and highlight grids
+		const roundedN1 = roundToNearestGrid(n1);
+		const roundedN2 = roundToNearestGrid(n2);
+		// Try to highlight corresponding numbers in the two grids (safe if DOM not present)
+		highlightGridNumber('grid-a', roundedN1);
+		highlightGridNumber('grid-b', roundedN2);
+
+		return [direction, roundedN1, roundedN2];
 }
 
 function config2coordinate(direction, n1, n2) {
@@ -143,4 +188,57 @@ document.addEventListener('DOMContentLoaded', function() {
 		`;
 		reverseResultsDiv.style.display = 'block';
 	});
+
+
+	// Create two 9x5 number grids (40,50,...,480)
+	function createNumberGrid(containerId) {
+		const container = document.getElementById(containerId);
+		if (!container) return;
+		container.innerHTML = '';
+		// determine target input id for this grid (left -> input-n1, right -> input-n2)
+		const targetInputId = containerId === 'grid-a' ? 'input-n1' : (containerId === 'grid-b' ? 'input-n2' : null);
+		for (let i = 0; i < 45; i++) {
+			const num = 40 + i * 10;
+			const btn = document.createElement('button');
+			btn.type = 'button';
+			btn.className = 'grid-button';
+			btn.textContent = num;
+			btn.setAttribute('data-number', num);
+			btn.setAttribute('aria-pressed', 'false');
+			btn.addEventListener('click', function() {
+				const siblings = container.querySelectorAll('.grid-button');
+				siblings.forEach(s => {
+					if (s === btn) return;
+					// only remove manual selection; keep any auto-selected (green) highlights
+					s.classList.remove('selected');
+					s.setAttribute('aria-pressed', 'false');
+				});
+				// Select clicked button (manual selection). Do not remove auto-selected markers.
+				btn.classList.add('selected');
+				btn.setAttribute('aria-pressed', 'true');
+				container.setAttribute('data-selected', num);
+				// If this grid maps to an input, populate it and emit an input event
+				if (targetInputId) {
+					const inputEl = document.getElementById(targetInputId);
+					if (inputEl) {
+						inputEl.value = num;
+						const ev = new Event('input', { bubbles: true });
+						inputEl.dispatchEvent(ev);
+					}
+				}
+			});
+			// keyboard support
+			btn.addEventListener('keydown', function(e) {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault();
+					btn.click();
+				}
+			});
+			container.appendChild(btn);
+		}
+		// Optionally ensure first cell is not preselected. User must choose.
+	}
+
+	createNumberGrid('grid-a');
+	createNumberGrid('grid-b');
 });
