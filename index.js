@@ -81,7 +81,7 @@ function coordinate2config(x, z) {
 		highlightGridNumber('grid-a', roundedN1);
 		highlightGridNumber('grid-b', roundedN2);
 
-		return [direction, roundedN1, roundedN2];
+		return [direction, n1, n2];
 }
 
 function config2coordinate(direction, n1, n2) {
